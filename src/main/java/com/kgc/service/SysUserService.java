@@ -1,8 +1,6 @@
 package com.kgc.service;
 
 import com.kgc.entity.SysUser;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 /**
  * 用户表(SysUser)表服务接口
