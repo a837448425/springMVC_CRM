@@ -19,7 +19,7 @@ public class SysUser implements Serializable {
     /**
      * 编号
      */
-    private String userId;
+    private Integer userId;
 
     /**
      * 用户名

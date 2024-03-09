@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.mapper.SysUserMapper">
+
+    <resultMap type="com.kgc.entity.SysUser" id="SysUserMap">
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="userPassword" column="user_password" jdbcType="VARCHAR"/>
+        <result property="userRoleId" column="user_role_id" jdbcType="INTEGER"/>
+        <result property="userFlag" column="user_flag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SysUserMap">
+        select
+          user_id, user_name, user_password, user_role_id, user_flag
+        from sys_user
+        where user_id = #{userId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SysUserMap">
+        select
+          user_id, user_name, user_password, user_role_id, user_flag
+        from sys_user
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="userName != null and userName != ''">
+                and user_name = #{userName}
+            </if>
+            <if test="userPassword != null and userPassword != ''">
+                and user_password = #{userPassword}
+            </if>
+            <if test="userRoleId != null">
+                and user_role_id = #{userRoleId}
+            </if>
+            <if test="userFlag != null">
+                and user_flag = #{userFlag}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from sys_user
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="userName != null and userName != ''">
+                and user_name = #{userName}
+            </if>
+            <if test="userPassword != null and userPassword != ''">
+                and user_password = #{userPassword}
+            </if>
+            <if test="userRoleId != null">
+                and user_role_id = #{userRoleId}
+            </if>
+            <if test="userFlag != null">
+                and user_flag = #{userFlag}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
+        insert into sys_user(user_name, user_password, user_role_id, user_flag)
+        values (#{userName}, #{userPassword}, #{userRoleId}, #{userFlag})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into sys_user(user_name, user_password, user_role_id, user_flag)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.userName}, #{entity.userPassword}, #{entity.userRoleId}, #{entity.userFlag})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into sys_user(user_name, user_password, user_role_id, user_flag)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userName}, #{entity.userPassword}, #{entity.userRoleId}, #{entity.userFlag})
+        </foreach>
+        on duplicate key update
+        user_name = values(user_name),
+        user_password = values(user_password),
+        user_role_id = values(user_role_id),
+        user_flag = values(user_flag)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update sys_user
+        <set>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="userPassword != null and userPassword != ''">
+                user_password = #{userPassword},
+            </if>
+            <if test="userRoleId != null">
+                user_role_id = #{userRoleId},
+            </if>
+            <if test="userFlag != null">
+                user_flag = #{userFlag},
+            </if>
+        </set>
+        where user_id = #{userId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from sys_user where user_id = #{userId}
+    </delete>
+
+</mapper>
+
